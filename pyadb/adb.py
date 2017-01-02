@@ -471,13 +471,17 @@ class ADB():
         self.run_cmd(cmd.split())
         return self.__output
 
-    def install(self,fwdlock=False,reinstall=False,sdcard=False,pkgapp=None):
+    def install(self,fwdlock=False,reinstall=False,sdcard=False,allowtestpkg=False,allowdowngrade=False,grantperms=False,pkgapp=None):
         """
         Push this package file to the device and install it
-        adb install [-l] [-r] [-s] <file>
-        -l -> forward-lock the app
-        -r -> reinstall the app, keeping its data
-        -s -> install on sdcard instead of internal storage
+        adb install [-lrtsdg] <file>
+        -l: forward-lock the app
+        -r: reinstall the app, keeping its data
+        -s: install on sdcard instead of internal storage
+        -t: allow test packages
+        -d: allow version code downgrade (debuggable packages only)
+        -g: grant all runtime permissions
+
         """
 
         self.__clean__()
@@ -491,6 +495,12 @@ class ADB():
             cmd += "-r "
         if sdcard is True:
             cmd += "-s "
+        if allowtestpkg is True:
+            cmd += "-t "
+        if allowdowngrade is True:
+            cmd += "-d "
+        if grantperms is True:
+            cmd += "-g "
  
         cmd += pkgapp
         self.run_cmd(cmd.split())
